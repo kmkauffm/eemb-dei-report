@@ -1,0 +1,163 @@
+---
+title: "EEMB DEI Report - 2022/23"
+author: Kayla Kauffman and Lauren Enright
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: true
+    toc-location: left
+  pdf:
+    toc: true
+    toc-title: Contents
+    documentclass: report
+    
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+
+theme_set(theme_bw())
+theme_update(axis.title = element_blank())
+```
+
+# Load Data  
+These are the questions to be analyzed after omiting long responses (eg what "Other" means, "define diversity") and demographic information.
+```{r}
+#| message: false
+#| warning: false
+## questions in a useable format
+questions <- read_csv("eemb_dei_colrename.csv")  %>% 
+  unite("newcolnames", c(colnames, category), sep = ":", na.rm=T, remove=F)
+
+## these are the questions to be analyzed
+questions %>% 
+  filter(!str_detect(newcolnames, "longanswer"), 
+         !str_detect(newcolnames, "demograph"), 
+         !str_detect(newcolnames, "other"),
+         !str_detect(newcolnames, "confirm")) %>% 
+  select(question)
+```
+
+In the dataset analyzed the shorter names for the questions are as follows after removing extra text:
+```{r}
+(questions.short <- questions %>% 
+  filter(!str_detect(newcolnames, "longanswer"), 
+         !str_detect(newcolnames, "demograph"), 
+         !str_detect(newcolnames, "other"),
+         !str_detect(newcolnames, "eemb_support"),
+         !str_detect(newcolnames, "confirm")) %>% 
+   separate(question, c("question", NA), sep = "-") %>% 
+  select(question, colnames) %>% 
+   mutate(question = str_remove_all(question, "\nUnderrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population."),
+          question = str_remove_all(question, "(financially, mentally, emotionally, academically, etc.)"),
+          question = str_remove_all(question, "Please identify how available support is for each item based on your experience as a graduate student in EEMB.\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". "),
+          question = str_remove_all(question, "(We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) "),
+          question = str_remove_all(question, "(Science by the Pint, Happy Hour, Tea Time, Seminars)"),
+          question = str_remove_all(question, "\\("),
+          question = str_remove_all(question, "\\)")) %>% 
+  distinct()) 
+```
+
+Load the survey data and assign levels to all of the multilevel responses
+```{r}
+#| message: false
+#| warning: false
+## raw survey
+raw <- read_csv("EEMB Grad Student Climate Survey.csv", skip = 1) %>% 
+  select(-1)
+
+mc <- raw
+colnames(mc) <- questions$newcolnames
+
+mc <- mc %>% 
+  select(-contains("longanswer"), 
+         -contains("demographic"),
+         -contains("other"),
+         -contains("eemb_support"),
+         -confirm)
+colnames(mc)
+
+
+
+## add levels to scaled questions
+mc %>% select(contains("eemb_prior")) %>% pivot_longer(everything()) %>% pull(value) %>% unique()
+mc <- mc %>% 
+  mutate(across(c(contains("dei_conversations"),
+                  contains("discrimination_reporting")), ~factor(., levels = c("Very uncomfortable",
+                                                                     "Somewhat uncomfortable", 
+                                                                     "Neither comfortable nor uncomfortable",
+                                                                     "Somewhat comfortable",
+                                                                     "Extremely comfortable",
+                                                                     "Unsure"))),
+         across(c(contains("personally_supported"),
+                  contains("eemb_ta")), ~ factor(., levels = c("Strongly disagree", 
+                                                                         "Somewhat disagree", 
+                                                                         "Neither agree nor disagree",
+                                                                         "Somewhat agree",
+                                                                         "Strongly agree"))),
+         across(contains("eemb_issues"), ~ factor(., levels = c("No", "Somewhat", "Yes", "Unsure"))),
+         across(contains("group"), ~factor(., levels = c("No support", "Minimal support", "Some support", "Good suppot", "Great support", "Not sure"))),
+         eemb_dei_meeting_frequency = factor(eemb_dei_meeting_frequency, levels = c("Every once in a while as needed", 
+                                                                                    "Once a year", 
+                                                                                    "Twice a year", 
+                                                                                    "Once a quarter")),
+         across(contains("factors"), ~ factor(., levels = c("Not at all important", "Mostly unimportant", "Moderately important", "Very important"))),
+         across(contains("eemb_strengths"), ~ factor(., levels = c("Critically lacking",
+                                                     "Somewhat lacking",
+                                                     "Somewhat available", 
+                                                     "Readily available", 
+                                                     "Unsure"))),
+         across(contains("financially_supported"), ~ factor(., levels = c("Poor", 
+                                                                          "Adequate", 
+                                                                          "Fair", 
+                                                                          "Good", 
+                                                                          "Great"))),
+         across(c(`social:type`, `social:climate`), ~factor(`social:type`, levels = c("Extremely dissatisfied",
+                                                          "Somewhat dissatisfied",
+                                                          "Neither satisfied nor dissatisfied",
+                                                          "Somewhat satisfied",
+                                                          "Extremely satisfied"))))
+```
+
+# Summarize responses  
+Without the demographics, all there is to report is how many people responded. Last year they grouped people into "Person of Color" and "White".
+```{r}
+nrow(mc)
+```
+
+# Plots  
+```{r}
+## plotting function
+plot_fun <- function(question){
+  plot_title = questions.short$question[which(questions.short$colnames == question)]
+  plot_title = str_wrap(plot_title, width = 50)
+  
+  mc %>% 
+    select(contains(question)) %>% 
+    pivot_longer(everything()) %>% 
+    mutate(name = str_remove_all(name, paste0(question, ":")),
+           name = str_wrap(name, width=30)) %>% 
+    ggplot()+
+    geom_bar(aes(y = name, fill = value),
+             position = "fill")+
+    labs(title = plot_title,
+         fill = NULL)
+}
+
+# plot_fun(questions.short$colnames[1])
+```
+
+
+```{r}
+toplot <- questions.short %>% 
+  filter(!colnames %in% c("finances", "monthly_bills", "eemb_prioritize", "eemb_dei_meeting_frequency", "discrimination_resources", "social"))
+for (i in 1:nrow(toplot)) {
+  print(
+  plot_fun(toplot$colnames[i]) 
+  )
+}
+plot_fun(toplot$colnames[8])
+```
+

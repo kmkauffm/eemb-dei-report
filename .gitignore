@@ -47,3 +47,6 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Ignore Data files
+EEMB Grad Student Climate Survey.csv

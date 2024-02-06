@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kayla Kauffman and Lauren Enright">
+<meta name="dcterms.date" content="2024-02-05">
+
+<title>EEMB DEI Report - 2022/23</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="report_analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="report_analysis_files/libs/quarto-html/quarto.js"></script>
+<script src="report_analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="report_analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="report_analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="report_analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="report_analysis_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="report_analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="report_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="report_analysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link active" data-scroll-target="#load-data">Load Data</a></li>
+  <li><a href="#summarize-responses" id="toc-summarize-responses" class="nav-link" data-scroll-target="#summarize-responses">Summarize responses</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="report_analysis.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">EEMB DEI Report - 2022/23</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Kayla Kauffman and Lauren Enright </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 5, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="load-data" class="level1">
+<h1>Load Data</h1>
+<p>These are the questions to be analyzed after omiting long responses (eg what “Other” means, “define diversity”) and demographic information.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## questions in a useable format</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>questions <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"eemb_dei_colrename.csv"</span>)  <span class="sc">%&gt;%</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(<span class="st">"newcolnames"</span>, <span class="fu">c</span>(colnames, category), <span class="at">sep =</span> <span class="st">":"</span>, <span class="at">na.rm=</span>T, <span class="at">remove=</span>F)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## these are the questions to be analyzed</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>questions <span class="sc">%&gt;%</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"longanswer"</span>), </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"demograph"</span>), </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"other"</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"confirm"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 97 × 1
+   question                                                                     
+   &lt;chr&gt;                                                                        
+ 1 How comfortable do you feel discussing about general DEI issues with: - Frie…
+ 2 How comfortable do you feel discussing about general DEI issues with: - Fami…
+ 3 How comfortable do you feel discussing about general DEI issues with: - peer…
+ 4 How comfortable do you feel discussing about general DEI issues with: - juni…
+ 5 How comfortable do you feel discussing about general DEI issues with: - seni…
+ 6 How comfortable do you feel discussing about general DEI issues with: - advi…
+ 7 How comfortable do you feel discussing about general DEI issues with: - non-…
+ 8 How comfortable do you feel discussing about general DEI issues with: - EEMB…
+ 9 How comfortable do you feel discussing about general DEI issues with: - Anon…
+10 Do you personally feel well supported - academically by the department       
+# ℹ 87 more rows</code></pre>
+</div>
+</div>
+<p>In the dataset analyzed the shorter names for the questions are as follows after removing extra text:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(questions.short <span class="ot">&lt;-</span> questions <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"longanswer"</span>), </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"demograph"</span>), </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"other"</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"eemb_support"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"confirm"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">separate</span>(question, <span class="fu">c</span>(<span class="st">"question"</span>, <span class="cn">NA</span>), <span class="at">sep =</span> <span class="st">"-"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(question, colnames) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\n</span><span class="st">Underrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population."</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(financially, mentally, emotionally, academically, etc.)"</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"Please identify how available support is for each item based on your experience as a graduate student in EEMB.</span><span class="sc">\n</span><span class="st">Support can mean </span><span class="sc">\"</span><span class="st">the department provides this resource</span><span class="sc">\"</span><span class="st"> or </span><span class="sc">\"</span><span class="st">the department shows me where to find this resource</span><span class="sc">\"</span><span class="st">. "</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) "</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(Science by the Pint, Happy Hour, Tea Time, Seminars)"</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\\</span><span class="st">("</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\\</span><span class="st">)"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Expected 2 pieces. Additional pieces discarded in 27 rows [7, 19, 20, 24, 37,
+38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 55, 62, 63, 65, 66, ...].</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Expected 2 pieces. Missing pieces filled with `NA` in 5 rows [29, 64, 81, 82,
+83].</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 17 × 2
+   question                                                             colnames
+   &lt;chr&gt;                                                                &lt;chr&gt;   
+ 1 "How comfortable do you feel discussing about general DEI issues wi… dei_con…
+ 2 "Do you personally feel well supported "                             persona…
+ 3 "Do you think any of the following are issues in the EEMB departmen… eemb_is…
+ 4 "To what extent do you feel that graduate students from the followi… group_s…
+ 5 "I know what resources are available to me if I am discriminated ag… discrim…
+ 6 "I feel comfortable using these resources and/or reporting acts of … discrim…
+ 7 "How often do you think the department should hold department"       eemb_de…
+ 8 "There are many factors that can have an effect on someone's well"   factors 
+ 9 "We would like to identify EEMB's strengths and weaknesses in suppo… eemb_st…
+10 "Please use the scale below to help us understand the state of your… finances
+11 "To meet my monthly bills, I rely on..."                             monthly…
+12 "How would you rate the support for personal financial well"         financi…
+13 "How would you rate your experience as a TA for EEMB courses? We ar… eemb_ta 
+14 "How satisfied are you by the frequency of social opportunities/eve… social  
+15 "How satisfied are you by the types of social opportunities/events … social  
+16 "How satisfied are you by the climate of the social events/opportun… social  
+17 "Which topics would you like EEMB to prioritize with regards to att… eemb_pr…</code></pre>
+</div>
+</div>
+<p>Load the survey data and assign levels to all of the multilevel responses</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## raw survey</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"EEMB Grad Student Climate Survey.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> raw</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mc) <span class="ot">&lt;-</span> questions<span class="sc">$</span>newcolnames</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> mc <span class="sc">%&gt;%</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"longanswer"</span>), </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"demographic"</span>),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"other"</span>),</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"eemb_support"</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>confirm)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "dei_conversations:Friends"                                                                                                              
+ [2] "dei_conversations:Family members"                                                                                                       
+ [3] "dei_conversations:peer EEMB graduate students"                                                                                          
+ [4] "dei_conversations:junior EEMB graduate students"                                                                                        
+ [5] "dei_conversations:senior EEMB graduate students"                                                                                        
+ [6] "dei_conversations:advising faculty"                                                                                                     
+ [7] "dei_conversations:non-advising EEMB faculty"                                                                                            
+ [8] "dei_conversations:EEMB staff"                                                                                                           
+ [9] "dei_conversations:Anonymous bias reporting on the EEMB DEI website"                                                                     
+[10] "personally_supported:academically by the department"                                                                                    
+[11] "personally_supported:financially by the department"                                                                                     
+[12] "personally_supported:mentally and emotionally by the department"                                                                        
+[13] "eemb_issues:Lack of graduate students from underrepresented backgrounds"                                                                
+[14] "eemb_issues:Bias against graduate students from underrepresented backgrounds"                                                           
+[15] "eemb_issues:General lack of support for graduate students from underrepresented backgrounds"                                            
+[16] "eemb_issues:Lack of invited speakers from underrepresented backgrounds"                                                                 
+[17] "eemb_issues:Lack of faculty from underrepresented backgrounds"                                                                          
+[18] "group_supported:All graduate students"                                                                                                  
+[19] "group_supported:First-generation college"                                                                                               
+[20] "group_supported:First-generation graduate"                                                                                              
+[21] "group_supported:Socioeconomically disadvantaged"                                                                                        
+[22] "group_supported:Underrepresented cultural backgrounds"                                                                                  
+[23] "group_supported:Underrepresented ethnicities"                                                                                           
+[24] "group_supported:International (non-American)"                                                                                           
+[25] "group_supported:Underrepresented gender identities"                                                                                     
+[26] "group_supported:Underrepresented sexualities"                                                                                           
+[27] "group_supported:Physical disabilities"                                                                                                  
+[28] "group_supported:Neurodivergent"                                                                                                         
+[29] "discrimination_resources"                                                                                                               
+[30] "discrimination_reporting:Talking to my advisor"                                                                                         
+[31] "discrimination_reporting:Talking to the EEMB Chair"                                                                                     
+[32] "discrimination_reporting:Talking to the Grad Affairs Chair"                                                                             
+[33] "discrimination_reporting:Talking to a committee member"                                                                                 
+[34] "discrimination_reporting:Reporting to the EEMB anonymous feedback site"                                                                 
+[35] "discrimination_reporting:Reporting outside of EEMB"                                                                                     
+[36] "eemb_dei_meeting_frequency"                                                                                                             
+[37] "factors:Non-academic support from research advisors, including committee advisors"                                                      
+[38] "factors:Academic support from peers"                                                                                                    
+[39] "factors:Non-academic support from peers"                                                                                                
+[40] "factors:Approachability of non-advising faculty"                                                                                        
+[41] "factors:Approachability of department staff"                                                                                            
+[42] "factors:Sense of department camaraderie"                                                                                                
+[43] "factors:Mentorship opportunities"                                                                                                       
+[44] "factors:Spirituality/religion"                                                                                                          
+[45] "factors:Social life"                                                                                                                    
+[46] "factors:Family life"                                                                                                                    
+[47] "factors:Spending time outdoors"                                                                                                         
+[48] "eemb_strengths_weaknesses:Mental Health"                                                                                                
+[49] "eemb_strengths_weaknesses:Physical Health"                                                                                              
+[50] "eemb_strengths_weaknesses:Physical Safety"                                                                                              
+[51] "eemb_strengths_weaknesses:Food security"                                                                                                
+[52] "eemb_strengths_weaknesses:Financial security"                                                                                           
+[53] "eemb_strengths_weaknesses:Sense of department camaraderie"                                                                              
+[54] "eemb_strengths_weaknesses:Academic support from research advisors, including committee advisors"                                        
+[55] "eemb_strengths_weaknesses:Approachability of non-advising faculty"                                                                      
+[56] "eemb_strengths_weaknesses:Approachability of department staff"                                                                          
+[57] "eemb_strengths_weaknesses:Mentorship opportunities"                                                                                     
+[58] "eemb_strengths_weaknesses:Spirituality/religion"                                                                                        
+[59] "eemb_strengths_weaknesses:Social life"                                                                                                  
+[60] "eemb_strengths_weaknesses:Family life"                                                                                                  
+[61] "eemb_strengths_weaknesses:Spending time outdoors"                                                                                       
+[62] "finances:Monthly salary ($, current spring quarter 2023)"                                                                               
+[63] "finances:Monthly cost of living currently ($, rent, food, gas, internet, dependency care, etc.)"                                        
+[64] "monthly_bills"                                                                                                                          
+[65] "financially_supported:Teaching assistantship"                                                                                           
+[66] "financially_supported:Summer block grant"                                                                                               
+[67] "financially_supported:Graduate student research assistantship"                                                                          
+[68] "financially_supported:Conference travel"                                                                                                
+[69] "financially_supported:Research support for research project"                                                                            
+[70] "financially_supported:Emergency support"                                                                                                
+[71] "financially_supported:Research support for objects or consummables that may be personally supplied (computer, car, software)."          
+[72] "financially_supported:Mentoring students"                                                                                               
+[73] "financially_supported:Service work provided to the department (organizing seminars, events, etc.)"                                      
+[74] "eemb_ta:Time dedicated to TA'ing is reasonable and assigned tasks can be accomplished within the hours that I am paid for."             
+[75] "eemb_ta:TAs are not expected to carry out tasks outside the scope of their contracts."                                                  
+[76] "eemb_ta:There is sufficient training given to graduate students to learn how to TA."                                                    
+[77] "eemb_ta:TA stress levels are comparable or less to that of graduate students on GSR or fellowship"                                      
+[78] "eemb_ta:Even though I have wanted to say 'no', I have felt pressured to take on extra positions (extra reader positions, TAships, etc.)"
+[79] "eemb_ta:There is reasonable support from the professors I TA for"                                                                       
+[80] "eemb_ta:I have been confident in my knowledge of the material in the courses to which I have been assigned to TA."                      
+[81] "social:frequency"                                                                                                                       
+[82] "social:type"                                                                                                                            
+[83] "social:climate"                                                                                                                         
+[84] "eemb_prioritize:Equity and transparency for financial support"                                                                          
+[85] "eemb_prioritize:Departmental climate (inclusivity and wellbeing)"                                                                       
+[86] "eemb_prioritize:Departmental transparency"                                                                                              
+[87] "eemb_prioritize:Faculty advising"                                                                                                       
+[88] "eemb_prioritize:Professional skills development (e.g., stat courses)"                                                                   
+[89] "eemb_prioritize:Program requirements (e.g., oral exam structure)"                                                                       
+[90] "eemb_prioritize:Teaching assistant assignments or GSR work load"                                                                        
+[91] "eemb_prioritize:Faculty diversity (e.g., recruitment and retention)"                                                                    
+[92] "eemb_prioritize:Graduate student diversity (e.g., recruitment and retention)"                                                           
+[93] "eemb_prioritize:Undergraduate student diversity (e.g., recruitment and retention)"                                                      
+[94] "eemb_prioritize:Staff diversity (e.g., recruitment and retention)"                                                                      
+[95] "eemb_prioritize:Research associate diversity (e.g., recruitment and retention)"                                                         </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## add levels to scaled questions</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"eemb_prior"</span>)) <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(value) <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  6  2  3  1  4  5  7  8  9 10 12 11 NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> mc <span class="sc">%&gt;%</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"dei_conversations"</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">contains</span>(<span class="st">"discrimination_reporting"</span>)), <span class="sc">~</span><span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Very uncomfortable"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Somewhat uncomfortable"</span>, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Neither comfortable nor uncomfortable"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Somewhat comfortable"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Extremely comfortable"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Unsure"</span>))),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"personally_supported"</span>),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">contains</span>(<span class="st">"eemb_ta"</span>)), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Strongly disagree"</span>, </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Somewhat disagree"</span>, </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Neither agree nor disagree"</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Somewhat agree"</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Strongly agree"</span>))),</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"eemb_issues"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Somewhat"</span>, <span class="st">"Yes"</span>, <span class="st">"Unsure"</span>))),</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"group"</span>), <span class="sc">~</span><span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No support"</span>, <span class="st">"Minimal support"</span>, <span class="st">"Some support"</span>, <span class="st">"Good suppot"</span>, <span class="st">"Great support"</span>, <span class="st">"Not sure"</span>))),</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">eemb_dei_meeting_frequency =</span> <span class="fu">factor</span>(eemb_dei_meeting_frequency, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Every once in a while as needed"</span>, </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Once a year"</span>, </span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Twice a year"</span>, </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Once a quarter"</span>)),</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"factors"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Not at all important"</span>, <span class="st">"Mostly unimportant"</span>, <span class="st">"Moderately important"</span>, <span class="st">"Very important"</span>))),</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"eemb_strengths"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Critically lacking"</span>,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Somewhat lacking"</span>,</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Somewhat available"</span>, </span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Readily available"</span>, </span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Unsure"</span>))),</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"financially_supported"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Poor"</span>, </span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Adequate"</span>, </span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Fair"</span>, </span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Good"</span>, </span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Great"</span>))),</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(<span class="st">`</span><span class="at">social:type</span><span class="st">`</span>, <span class="st">`</span><span class="at">social:climate</span><span class="st">`</span>), <span class="sc">~</span><span class="fu">factor</span>(<span class="st">`</span><span class="at">social:type</span><span class="st">`</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Extremely dissatisfied"</span>,</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Somewhat dissatisfied"</span>,</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Neither satisfied nor dissatisfied"</span>,</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Somewhat satisfied"</span>,</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Extremely satisfied"</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="summarize-responses" class="level1">
+<h1>Summarize responses</h1>
+<p>Without the demographics, all there is to report is how many people responded. Last year they grouped people into “Person of Color” and “White”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23</code></pre>
+</div>
+</div>
+</section>
+<section id="plots" class="level1">
+<h1>Plots</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## plotting function</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plot_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(question){</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  plot_title <span class="ot">=</span> questions.short<span class="sc">$</span>question[<span class="fu">which</span>(questions.short<span class="sc">$</span>colnames <span class="sc">==</span> question)]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  plot_title <span class="ot">=</span> <span class="fu">str_wrap</span>(plot_title, <span class="at">width =</span> <span class="dv">50</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  mc <span class="sc">%&gt;%</span> </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">contains</span>(question)) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_remove_all</span>(name, <span class="fu">paste0</span>(question, <span class="st">":"</span>)),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">name =</span> <span class="fu">str_wrap</span>(name, <span class="at">width=</span><span class="dv">30</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> name, <span class="at">fill =</span> value),</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="st">"fill"</span>)<span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> plot_title,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> <span class="cn">NULL</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_fun(questions.short$colnames[1])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>toplot <span class="ot">&lt;-</span> questions.short <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>colnames <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"finances"</span>, <span class="st">"monthly_bills"</span>, <span class="st">"eemb_prioritize"</span>, <span class="st">"eemb_dei_meeting_frequency"</span>, <span class="st">"discrimination_resources"</span>, <span class="st">"social"</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(toplot)) {</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[i]) </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-7.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-8.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-9.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">8</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-10.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
