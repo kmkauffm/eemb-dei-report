@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Kayla Kauffman and Lauren Enright">
-<meta name="dcterms.date" content="2024-02-05">
+<meta name="dcterms.date" content="2024-03-21">
 
 <title>EEMB DEI Report - 2022/23</title>
 <style>
@@ -70,6 +70,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="report_analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="report_analysis_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
+<link href="report_analysis_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="report_analysis_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+
 
 </head>
 
@@ -82,8 +85,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#load-data" id="toc-load-data" class="nav-link active" data-scroll-target="#load-data">Load Data</a></li>
-  <li><a href="#summarize-responses" id="toc-summarize-responses" class="nav-link" data-scroll-target="#summarize-responses">Summarize responses</a></li>
-  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
+  <li><a href="#summarize-responses" id="toc-summarize-responses" class="nav-link" data-scroll-target="#summarize-responses">Summarize responses</a>
+  <ul class="collapse">
+  <li><a href="#who-took-the-survey" id="toc-who-took-the-survey" class="nav-link" data-scroll-target="#who-took-the-survey">who took the survey</a></li>
+  </ul></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a>
+  <ul class="collapse">
+  <li><a href="#discussing-general-dei-issues" id="toc-discussing-general-dei-issues" class="nav-link" data-scroll-target="#discussing-general-dei-issues">Discussing general DEI issues</a></li>
+  <li><a href="#personally-feel-well-supported" id="toc-personally-feel-well-supported" class="nav-link" data-scroll-target="#personally-feel-well-supported">Personally feel well supported</a></li>
+  <li><a href="#issues-with-representation" id="toc-issues-with-representation" class="nav-link" data-scroll-target="#issues-with-representation">Issues with representation</a></li>
+  <li><a href="#extent-graduate-students-supported" id="toc-extent-graduate-students-supported" class="nav-link" data-scroll-target="#extent-graduate-students-supported">Extent graduate students supported</a></li>
+  <li><a href="#reporting-discrimination" id="toc-reporting-discrimination" class="nav-link" data-scroll-target="#reporting-discrimination">Reporting discrimination</a></li>
+  <li><a href="#well-being-factors" id="toc-well-being-factors" class="nav-link" data-scroll-target="#well-being-factors">Well-being factors</a></li>
+  <li><a href="#strengths-and-weaknesses" id="toc-strengths-and-weaknesses" class="nav-link" data-scroll-target="#strengths-and-weaknesses">Strengths and weaknesses</a></li>
+  <li><a href="#financial-well-being" id="toc-financial-well-being" class="nav-link" data-scroll-target="#financial-well-being">Financial well-being</a></li>
+  <li><a href="#taing-experiences" id="toc-taing-experiences" class="nav-link" data-scroll-target="#taing-experiences">TAing experiences</a></li>
+  </ul></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="report_analysis.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
@@ -110,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 5, 2024</p>
+      <p class="date">March 21, 2024</p>
     </div>
   </div>
   
@@ -131,304 +148,646 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## these are the questions to be analyzed</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>questions <span class="sc">%&gt;%</span> </span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"longanswer"</span>), </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"demograph"</span>), </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>         <span class="co"># !str_detect(newcolnames, "demograph"), </span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"other"</span>),</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"confirm"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 97 × 1
-   question                                                                     
-   &lt;chr&gt;                                                                        
- 1 How comfortable do you feel discussing about general DEI issues with: - Frie…
- 2 How comfortable do you feel discussing about general DEI issues with: - Fami…
- 3 How comfortable do you feel discussing about general DEI issues with: - peer…
- 4 How comfortable do you feel discussing about general DEI issues with: - juni…
- 5 How comfortable do you feel discussing about general DEI issues with: - seni…
- 6 How comfortable do you feel discussing about general DEI issues with: - advi…
- 7 How comfortable do you feel discussing about general DEI issues with: - non-…
- 8 How comfortable do you feel discussing about general DEI issues with: - EEMB…
- 9 How comfortable do you feel discussing about general DEI issues with: - Anon…
-10 Do you personally feel well supported - academically by the department       
-# ℹ 87 more rows</code></pre>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["question"],"name":[1],"type":["chr"],"align":["left"]}],"data":[{"1":"How comfortable do you feel discussing about general DEI issues with: - Friends"},{"1":"How comfortable do you feel discussing about general DEI issues with: - Family members"},{"1":"How comfortable do you feel discussing about general DEI issues with: - peer EEMB graduate students"},{"1":"How comfortable do you feel discussing about general DEI issues with: - junior EEMB graduate students"},{"1":"How comfortable do you feel discussing about general DEI issues with: - senior EEMB graduate students"},{"1":"How comfortable do you feel discussing about general DEI issues with: - advising faculty"},{"1":"How comfortable do you feel discussing about general DEI issues with: - non-advising EEMB faculty"},{"1":"How comfortable do you feel discussing about general DEI issues with: - EEMB staff"},{"1":"How comfortable do you feel discussing about general DEI issues with: - Anonymous bias reporting on the EEMB DEI website"},{"1":"Do you personally feel well supported - academically by the department"},{"1":"Do you personally feel well supported - financially by the department"},{"1":"Do you personally feel well supported - mentally and emotionally by the department"},{"1":"Do you think any of the following are issues in the EEMB department?\\nUnderrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population. - Lack of graduate students from underrepresented backgrounds"},{"1":"Do you think any of the following are issues in the EEMB department?\\nUnderrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population. - Bias against graduate students from underrepresented backgrounds"},{"1":"Do you think any of the following are issues in the EEMB department?\\nUnderrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population. - General lack of support for graduate students from underrepresented backgrounds"},{"1":"Do you think any of the following are issues in the EEMB department?\\nUnderrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population. - Lack of invited speakers from underrepresented backgrounds"},{"1":"Do you think any of the following are issues in the EEMB department?\\nUnderrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population. - Lack of faculty from underrepresented backgrounds"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - All graduate students"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - First-generation college"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - First-generation graduate"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - Socioeconomically disadvantaged"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - Underrepresented cultural backgrounds"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - Underrepresented ethnicities"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - International (non-American)"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - Underrepresented gender identities"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - Underrepresented sexualities"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - Physical disabilities"},{"1":"To what extent do you feel that graduate students from the following groups are well supported (financially, mentally, emotionally, academically, etc.) in the EEMB department? - Neurodivergent"},{"1":"I know what resources are available to me if I am discriminated against or witness discrimination against someone else. Or I am confident that I can find the resource myself."},{"1":"I feel comfortable using these resources and/or reporting acts of discrimination. - Talking to my advisor"},{"1":"I feel comfortable using these resources and/or reporting acts of discrimination. - Talking to the EEMB Chair"},{"1":"I feel comfortable using these resources and/or reporting acts of discrimination. - Talking to the Grad Affairs Chair"},{"1":"I feel comfortable using these resources and/or reporting acts of discrimination. - Talking to a committee member"},{"1":"I feel comfortable using these resources and/or reporting acts of discrimination. - Reporting to the EEMB anonymous feedback site"},{"1":"I feel comfortable using these resources and/or reporting acts of discrimination. - Reporting outside of EEMB"},{"1":"How often do you think the department should hold department-wide meetings on DEI?"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Non-academic support from research advisors, including committee advisors"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Academic support from peers"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Non-academic support from peers"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Approachability of non-advising faculty"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Approachability of department staff"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Sense of department camaraderie"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Mentorship opportunities"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Spirituality/religion"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Social life"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Family life"},{"1":"There are many factors that can have an effect on someone's well-being. Please identify how important the following items are to your personal well-being. - Spending time outdoors"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Mental Health"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Physical Health"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Physical Safety"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Food security"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Financial security"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Sense of department camaraderie"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Academic support from research advisors, including committee advisors"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Approachability of non-advising faculty"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Approachability of department staff"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Mentorship opportunities"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Spirituality/religion"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Social life"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Family life"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness. Please identify how available support is for each item based on your experience as a graduate student in EEMB.\\nSupport can mean \"the department provides this resource\" or \"the department shows me where to find this resource\". - Spending time outdoors"},{"1":"Are there other factors (not listed above) that contribute to your personal well-being that EEMB has readily available? Please explain."},{"1":"Are there other factors (not listed above) that contribute to your personal well-being that EEMB is critically lacking? Please explain."},{"1":"Please use the scale below to help us understand the state of your financial well-being. - Monthly salary ($, current spring quarter 2023)"},{"1":"Please use the scale below to help us understand the state of your financial well-being. - Monthly cost of living currently ($, rent, food, gas, internet, dependency care, etc.)"},{"1":"To meet my monthly bills, I rely on..."},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Teaching assistantship"},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Summer block grant"},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Graduate student research assistantship"},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Conference travel"},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Research support for research project"},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Emergency support"},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Research support for objects or consummables that may be personally supplied (computer, car, software)."},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Mentoring students"},{"1":"How would you rate the support for personal financial well-being in our department? Since the salaries and stipends were recently re-negotiated, we would like to ask your opinion on the general 'attitude' of EEMB (your advisor, department, UCSB) towards financial stability and well-being rather than your opinion about the exact amount of financial support you received or will receive. - Service work provided to the department (organizing seminars, events, etc.)"},{"1":"How would you rate your experience as a TA for EEMB courses? (We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) - Time dedicated to TA'ing is reasonable and assigned tasks can be accomplished within the hours that I am paid for."},{"1":"How would you rate your experience as a TA for EEMB courses? (We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) - TAs are not expected to carry out tasks outside the scope of their contracts."},{"1":"How would you rate your experience as a TA for EEMB courses? (We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) - There is sufficient training given to graduate students to learn how to TA."},{"1":"How would you rate your experience as a TA for EEMB courses? (We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) - TA stress levels are comparable or less to that of graduate students on GSR or fellowship"},{"1":"How would you rate your experience as a TA for EEMB courses? (We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) - Even though I have wanted to say 'no', I have felt pressured to take on extra positions (extra reader positions, TAships, etc.)"},{"1":"How would you rate your experience as a TA for EEMB courses? (We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) - There is reasonable support from the professors I TA for"},{"1":"How would you rate your experience as a TA for EEMB courses? (We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) - I have been confident in my knowledge of the material in the courses to which I have been assigned to TA."},{"1":"How satisfied are you by the frequency of social opportunities/events (Science by the Pint, Happy Hour, Tea Time, Seminars) hosted by EEMB members?"},{"1":"How satisfied are you by the types of social opportunities/events (Science by the Pint, Happy Hour, Tea Time, Seminars) hosted by EEMB members?"},{"1":"How satisfied are you by the climate of the social events/opportunities hosted by EEMB members?"},{"1":"We are collecting demographic information to better understand our survey results. We will not repor"},{"1":"How many years have you been a graduate student in EEMB?"},{"1":"What is your gender identity (check all that apply)"},{"1":"What is your sexual orientation (check all that apply)"},{"1":"What is your ethnicity?"},{"1":"How would you describe your religious identity?"},{"1":"If you want some of your demographic information not linked to your responses, please explain which identities you are comfortable with us linking to your survey responses."},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Equity and transparency for financial support"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Departmental climate (inclusivity and wellbeing)"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Departmental transparency"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Faculty advising"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Professional skills development (e.g., stat courses)"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Program requirements (e.g., oral exam structure)"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Teaching assistant assignments or GSR work load"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Faculty diversity (e.g., recruitment and retention)"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Graduate student diversity (e.g., recruitment and retention)"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Undergraduate student diversity (e.g., recruitment and retention)"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Staff diversity (e.g., recruitment and retention)"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources? Please rank them in order. - Research associate diversity (e.g., recruitment and retention)"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>In the dataset analyzed the shorter names for the questions are as follows after removing extra text:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(questions.short <span class="ot">&lt;-</span> questions <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"longanswer"</span>), </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"demograph"</span>), </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"other"</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"eemb_support"</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"confirm"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">separate</span>(question, <span class="fu">c</span>(<span class="st">"question"</span>, <span class="cn">NA</span>), <span class="at">sep =</span> <span class="st">"-"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(question, colnames) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\n</span><span class="st">Underrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population."</span>),</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(financially, mentally, emotionally, academically, etc.)"</span>),</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"Please identify how available support is for each item based on your experience as a graduate student in EEMB.</span><span class="sc">\n</span><span class="st">Support can mean </span><span class="sc">\"</span><span class="st">the department provides this resource</span><span class="sc">\"</span><span class="st"> or </span><span class="sc">\"</span><span class="st">the department shows me where to find this resource</span><span class="sc">\"</span><span class="st">. "</span>),</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) "</span>),</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(Science by the Pint, Happy Hour, Tea Time, Seminars)"</span>),</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\\</span><span class="st">("</span>),</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\\</span><span class="st">)"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(questions.short <span class="ot">&lt;-</span> questions <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"longanswer"</span>), </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="co"># !str_detect(newcolnames, "demograph"), </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"other"</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"eemb_support"</span>),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span><span class="fu">str_detect</span>(newcolnames, <span class="st">"confirm"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span> <span class="fu">str_replace_all</span>(., <span class="st">"well-being"</span>, <span class="st">"wellbeing"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>   <span class="fu">separate</span>(question, <span class="fu">c</span>(<span class="st">"question"</span>, <span class="cn">NA</span>), <span class="at">sep =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">?"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">separate</span>(question, <span class="fu">c</span>(<span class="st">"question"</span>, <span class="cn">NA</span>), <span class="at">sep =</span> <span class="st">"-"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(question, colnames) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>   <span class="fu">mutate</span>(<span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\n</span><span class="st">Underrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population."</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(financially, mentally, emotionally, academically, etc.)"</span>),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"Please identify how available support is for each item based on your experience as a graduate student in EEMB.</span><span class="sc">\n</span><span class="st">Support can mean </span><span class="sc">\"</span><span class="st">the department provides this resource</span><span class="sc">\"</span><span class="st"> or </span><span class="sc">\"</span><span class="st">the department shows me where to find this resource</span><span class="sc">\"</span><span class="st">. "</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(We are primarily interested in TA experiences for EEMB courses with EEMB faculty/staff.) "</span>),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"(Science by the Pint, Happy Hour, Tea Time, Seminars)"</span>),</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\\</span><span class="st">("</span>),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>          <span class="at">question =</span> <span class="fu">str_remove_all</span>(question, <span class="st">"</span><span class="sc">\\</span><span class="st">)"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Expected 2 pieces. Additional pieces discarded in 27 rows [7, 19, 20, 24, 37,
-38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 55, 62, 63, 65, 66, ...].</code></pre>
+<pre><code>Warning: Expected 2 pieces. Missing pieces filled with `NA` in 51 rows [1, 2, 3, 4, 5,
+6, 7, 8, 9, 10, 11, 12, 29, 30, 31, 32, 33, 34, 35, 37, ...].</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Expected 2 pieces. Missing pieces filled with `NA` in 5 rows [29, 64, 81, 82,
-83].</code></pre>
+<pre><code>Warning: Expected 2 pieces. Additional pieces discarded in 5 rows [7, 37, 39,
+40, 55].</code></pre>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 17 × 2
-   question                                                             colnames
-   &lt;chr&gt;                                                                &lt;chr&gt;   
- 1 "How comfortable do you feel discussing about general DEI issues wi… dei_con…
- 2 "Do you personally feel well supported "                             persona…
- 3 "Do you think any of the following are issues in the EEMB departmen… eemb_is…
- 4 "To what extent do you feel that graduate students from the followi… group_s…
- 5 "I know what resources are available to me if I am discriminated ag… discrim…
- 6 "I feel comfortable using these resources and/or reporting acts of … discrim…
- 7 "How often do you think the department should hold department"       eemb_de…
- 8 "There are many factors that can have an effect on someone's well"   factors 
- 9 "We would like to identify EEMB's strengths and weaknesses in suppo… eemb_st…
-10 "Please use the scale below to help us understand the state of your… finances
-11 "To meet my monthly bills, I rely on..."                             monthly…
-12 "How would you rate the support for personal financial well"         financi…
-13 "How would you rate your experience as a TA for EEMB courses? We ar… eemb_ta 
-14 "How satisfied are you by the frequency of social opportunities/eve… social  
-15 "How satisfied are you by the types of social opportunities/events … social  
-16 "How satisfied are you by the climate of the social events/opportun… social  
-17 "Which topics would you like EEMB to prioritize with regards to att… eemb_pr…</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Expected 2 pieces. Missing pieces filled with `NA` in 56 rows [13, 14, 15, 16,
+17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 64, 65, 66, ...].</code></pre>
+</div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["question"],"name":[1],"type":["chr"],"align":["left"]},{"label":["colnames"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"How comfortable do you feel discussing about general DEI issues with:","2":"dei_conversations"},{"1":"Do you personally feel well supported","2":"personally_supported"},{"1":"Do you think any of the following are issues in the EEMB department","2":"eemb_issues"},{"1":"To what extent do you feel that graduate students from the following groups are well supported  in the EEMB department","2":"group_supported"},{"1":"I know what resources are available to me if I am discriminated against or witness discrimination against someone else. Or I am confident that I can find the resource myself.","2":"discrimination_resources"},{"1":"I feel comfortable using these resources and/or reporting acts of discrimination.","2":"discrimination_reporting"},{"1":"How often do you think the department should hold department","2":"eemb_dei_meeting_frequency"},{"1":"There are many factors that can have an effect on someone's wellbeing. Please identify how important the following items are to your personal wellbeing.","2":"factors"},{"1":"We would like to identify EEMB's strengths and weaknesses in supporting graduate student wellness.","2":"eemb_strengths_weaknesses"},{"1":"Please use the scale below to help us understand the state of your financial wellbeing.","2":"finances"},{"1":"To meet my monthly bills, I rely on...","2":"monthly_bills"},{"1":"How would you rate the support for personal financial wellbeing in our department","2":"financially_supported"},{"1":"How would you rate your experience as a TA for EEMB courses","2":"eemb_ta"},{"1":"How satisfied are you by the frequency of social opportunities/events  hosted by EEMB members","2":"social"},{"1":"How satisfied are you by the types of social opportunities/events  hosted by EEMB members","2":"social"},{"1":"How satisfied are you by the climate of the social events/opportunities hosted by EEMB members","2":"social"},{"1":"We are collecting demographic information to better understand our survey results. We will not repor","2":"demographic"},{"1":"How many years have you been a graduate student in EEMB","2":"demographic_years_grad"},{"1":"What is your gender identity check all that apply","2":"demographic_gender"},{"1":"What is your sexual orientation check all that apply","2":"demographic_sexual_orientation"},{"1":"What is your ethnicity","2":"demographic_ethnicity"},{"1":"How would you describe your religious identity","2":"demographic_religious"},{"1":"If you want some of your demographic information not linked to your responses, please explain which identities you are comfortable with us linking to your survey responses.","2":"demographic_hide_some"},{"1":"Which topics would you like EEMB to prioritize with regards to attention and resources","2":"eemb_prioritize"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 <p>Load the survey data and assign levels to all of the multilevel responses</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="do">## raw survey</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"EEMB Grad Student Climate Survey.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> raw</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mc) <span class="ot">&lt;-</span> questions<span class="sc">$</span>newcolnames</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> mc <span class="sc">%&gt;%</span> </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"longanswer"</span>), </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"demographic"</span>),</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"other"</span>),</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"eemb_support"</span>),</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>confirm)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## raw survey</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"EEMB Grad Student Climate Survey.csv"</span>, <span class="at">skip =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> raw</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mc) <span class="ot">&lt;-</span> questions<span class="sc">$</span>newcolnames</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> mc <span class="sc">%&gt;%</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">contains</span>(<span class="st">"longanswer"</span>), </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>         <span class="co"># -contains("demographic"),</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"other"</span>),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span><span class="fu">contains</span>(<span class="st">"eemb_support"</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>         <span class="sc">-</span>confirm)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "dei_conversations:Friends"                                                                                                              
- [2] "dei_conversations:Family members"                                                                                                       
- [3] "dei_conversations:peer EEMB graduate students"                                                                                          
- [4] "dei_conversations:junior EEMB graduate students"                                                                                        
- [5] "dei_conversations:senior EEMB graduate students"                                                                                        
- [6] "dei_conversations:advising faculty"                                                                                                     
- [7] "dei_conversations:non-advising EEMB faculty"                                                                                            
- [8] "dei_conversations:EEMB staff"                                                                                                           
- [9] "dei_conversations:Anonymous bias reporting on the EEMB DEI website"                                                                     
-[10] "personally_supported:academically by the department"                                                                                    
-[11] "personally_supported:financially by the department"                                                                                     
-[12] "personally_supported:mentally and emotionally by the department"                                                                        
-[13] "eemb_issues:Lack of graduate students from underrepresented backgrounds"                                                                
-[14] "eemb_issues:Bias against graduate students from underrepresented backgrounds"                                                           
-[15] "eemb_issues:General lack of support for graduate students from underrepresented backgrounds"                                            
-[16] "eemb_issues:Lack of invited speakers from underrepresented backgrounds"                                                                 
-[17] "eemb_issues:Lack of faculty from underrepresented backgrounds"                                                                          
-[18] "group_supported:All graduate students"                                                                                                  
-[19] "group_supported:First-generation college"                                                                                               
-[20] "group_supported:First-generation graduate"                                                                                              
-[21] "group_supported:Socioeconomically disadvantaged"                                                                                        
-[22] "group_supported:Underrepresented cultural backgrounds"                                                                                  
-[23] "group_supported:Underrepresented ethnicities"                                                                                           
-[24] "group_supported:International (non-American)"                                                                                           
-[25] "group_supported:Underrepresented gender identities"                                                                                     
-[26] "group_supported:Underrepresented sexualities"                                                                                           
-[27] "group_supported:Physical disabilities"                                                                                                  
-[28] "group_supported:Neurodivergent"                                                                                                         
-[29] "discrimination_resources"                                                                                                               
-[30] "discrimination_reporting:Talking to my advisor"                                                                                         
-[31] "discrimination_reporting:Talking to the EEMB Chair"                                                                                     
-[32] "discrimination_reporting:Talking to the Grad Affairs Chair"                                                                             
-[33] "discrimination_reporting:Talking to a committee member"                                                                                 
-[34] "discrimination_reporting:Reporting to the EEMB anonymous feedback site"                                                                 
-[35] "discrimination_reporting:Reporting outside of EEMB"                                                                                     
-[36] "eemb_dei_meeting_frequency"                                                                                                             
-[37] "factors:Non-academic support from research advisors, including committee advisors"                                                      
-[38] "factors:Academic support from peers"                                                                                                    
-[39] "factors:Non-academic support from peers"                                                                                                
-[40] "factors:Approachability of non-advising faculty"                                                                                        
-[41] "factors:Approachability of department staff"                                                                                            
-[42] "factors:Sense of department camaraderie"                                                                                                
-[43] "factors:Mentorship opportunities"                                                                                                       
-[44] "factors:Spirituality/religion"                                                                                                          
-[45] "factors:Social life"                                                                                                                    
-[46] "factors:Family life"                                                                                                                    
-[47] "factors:Spending time outdoors"                                                                                                         
-[48] "eemb_strengths_weaknesses:Mental Health"                                                                                                
-[49] "eemb_strengths_weaknesses:Physical Health"                                                                                              
-[50] "eemb_strengths_weaknesses:Physical Safety"                                                                                              
-[51] "eemb_strengths_weaknesses:Food security"                                                                                                
-[52] "eemb_strengths_weaknesses:Financial security"                                                                                           
-[53] "eemb_strengths_weaknesses:Sense of department camaraderie"                                                                              
-[54] "eemb_strengths_weaknesses:Academic support from research advisors, including committee advisors"                                        
-[55] "eemb_strengths_weaknesses:Approachability of non-advising faculty"                                                                      
-[56] "eemb_strengths_weaknesses:Approachability of department staff"                                                                          
-[57] "eemb_strengths_weaknesses:Mentorship opportunities"                                                                                     
-[58] "eemb_strengths_weaknesses:Spirituality/religion"                                                                                        
-[59] "eemb_strengths_weaknesses:Social life"                                                                                                  
-[60] "eemb_strengths_weaknesses:Family life"                                                                                                  
-[61] "eemb_strengths_weaknesses:Spending time outdoors"                                                                                       
-[62] "finances:Monthly salary ($, current spring quarter 2023)"                                                                               
-[63] "finances:Monthly cost of living currently ($, rent, food, gas, internet, dependency care, etc.)"                                        
-[64] "monthly_bills"                                                                                                                          
-[65] "financially_supported:Teaching assistantship"                                                                                           
-[66] "financially_supported:Summer block grant"                                                                                               
-[67] "financially_supported:Graduate student research assistantship"                                                                          
-[68] "financially_supported:Conference travel"                                                                                                
-[69] "financially_supported:Research support for research project"                                                                            
-[70] "financially_supported:Emergency support"                                                                                                
-[71] "financially_supported:Research support for objects or consummables that may be personally supplied (computer, car, software)."          
-[72] "financially_supported:Mentoring students"                                                                                               
-[73] "financially_supported:Service work provided to the department (organizing seminars, events, etc.)"                                      
-[74] "eemb_ta:Time dedicated to TA'ing is reasonable and assigned tasks can be accomplished within the hours that I am paid for."             
-[75] "eemb_ta:TAs are not expected to carry out tasks outside the scope of their contracts."                                                  
-[76] "eemb_ta:There is sufficient training given to graduate students to learn how to TA."                                                    
-[77] "eemb_ta:TA stress levels are comparable or less to that of graduate students on GSR or fellowship"                                      
-[78] "eemb_ta:Even though I have wanted to say 'no', I have felt pressured to take on extra positions (extra reader positions, TAships, etc.)"
-[79] "eemb_ta:There is reasonable support from the professors I TA for"                                                                       
-[80] "eemb_ta:I have been confident in my knowledge of the material in the courses to which I have been assigned to TA."                      
-[81] "social:frequency"                                                                                                                       
-[82] "social:type"                                                                                                                            
-[83] "social:climate"                                                                                                                         
-[84] "eemb_prioritize:Equity and transparency for financial support"                                                                          
-[85] "eemb_prioritize:Departmental climate (inclusivity and wellbeing)"                                                                       
-[86] "eemb_prioritize:Departmental transparency"                                                                                              
-[87] "eemb_prioritize:Faculty advising"                                                                                                       
-[88] "eemb_prioritize:Professional skills development (e.g., stat courses)"                                                                   
-[89] "eemb_prioritize:Program requirements (e.g., oral exam structure)"                                                                       
-[90] "eemb_prioritize:Teaching assistant assignments or GSR work load"                                                                        
-[91] "eemb_prioritize:Faculty diversity (e.g., recruitment and retention)"                                                                    
-[92] "eemb_prioritize:Graduate student diversity (e.g., recruitment and retention)"                                                           
-[93] "eemb_prioritize:Undergraduate student diversity (e.g., recruitment and retention)"                                                      
-[94] "eemb_prioritize:Staff diversity (e.g., recruitment and retention)"                                                                      
-[95] "eemb_prioritize:Research associate diversity (e.g., recruitment and retention)"                                                         </code></pre>
+<pre><code>  [1] "dei_conversations:Friends"                                                                                                              
+  [2] "dei_conversations:Family members"                                                                                                       
+  [3] "dei_conversations:peer EEMB graduate students"                                                                                          
+  [4] "dei_conversations:junior EEMB graduate students"                                                                                        
+  [5] "dei_conversations:senior EEMB graduate students"                                                                                        
+  [6] "dei_conversations:advising faculty"                                                                                                     
+  [7] "dei_conversations:non-advising EEMB faculty"                                                                                            
+  [8] "dei_conversations:EEMB staff"                                                                                                           
+  [9] "dei_conversations:Anonymous bias reporting on the EEMB DEI website"                                                                     
+ [10] "personally_supported:academically by the department"                                                                                    
+ [11] "personally_supported:financially by the department"                                                                                     
+ [12] "personally_supported:mentally and emotionally by the department"                                                                        
+ [13] "eemb_issues:Lack of graduate students from underrepresented backgrounds"                                                                
+ [14] "eemb_issues:Bias against graduate students from underrepresented backgrounds"                                                           
+ [15] "eemb_issues:General lack of support for graduate students from underrepresented backgrounds"                                            
+ [16] "eemb_issues:Lack of invited speakers from underrepresented backgrounds"                                                                 
+ [17] "eemb_issues:Lack of faculty from underrepresented backgrounds"                                                                          
+ [18] "group_supported:All graduate students"                                                                                                  
+ [19] "group_supported:First-generation college"                                                                                               
+ [20] "group_supported:First-generation graduate"                                                                                              
+ [21] "group_supported:Socioeconomically disadvantaged"                                                                                        
+ [22] "group_supported:Underrepresented cultural backgrounds"                                                                                  
+ [23] "group_supported:Underrepresented ethnicities"                                                                                           
+ [24] "group_supported:International (non-American)"                                                                                           
+ [25] "group_supported:Underrepresented gender identities"                                                                                     
+ [26] "group_supported:Underrepresented sexualities"                                                                                           
+ [27] "group_supported:Physical disabilities"                                                                                                  
+ [28] "group_supported:Neurodivergent"                                                                                                         
+ [29] "discrimination_resources"                                                                                                               
+ [30] "discrimination_reporting:Talking to my advisor"                                                                                         
+ [31] "discrimination_reporting:Talking to the EEMB Chair"                                                                                     
+ [32] "discrimination_reporting:Talking to the Grad Affairs Chair"                                                                             
+ [33] "discrimination_reporting:Talking to a committee member"                                                                                 
+ [34] "discrimination_reporting:Reporting to the EEMB anonymous feedback site"                                                                 
+ [35] "discrimination_reporting:Reporting outside of EEMB"                                                                                     
+ [36] "eemb_dei_meeting_frequency"                                                                                                             
+ [37] "factors:Non-academic support from research advisors, including committee advisors"                                                      
+ [38] "factors:Academic support from peers"                                                                                                    
+ [39] "factors:Non-academic support from peers"                                                                                                
+ [40] "factors:Approachability of non-advising faculty"                                                                                        
+ [41] "factors:Approachability of department staff"                                                                                            
+ [42] "factors:Sense of department camaraderie"                                                                                                
+ [43] "factors:Mentorship opportunities"                                                                                                       
+ [44] "factors:Spirituality/religion"                                                                                                          
+ [45] "factors:Social life"                                                                                                                    
+ [46] "factors:Family life"                                                                                                                    
+ [47] "factors:Spending time outdoors"                                                                                                         
+ [48] "eemb_strengths_weaknesses:Mental Health"                                                                                                
+ [49] "eemb_strengths_weaknesses:Physical Health"                                                                                              
+ [50] "eemb_strengths_weaknesses:Physical Safety"                                                                                              
+ [51] "eemb_strengths_weaknesses:Food security"                                                                                                
+ [52] "eemb_strengths_weaknesses:Financial security"                                                                                           
+ [53] "eemb_strengths_weaknesses:Sense of department camaraderie"                                                                              
+ [54] "eemb_strengths_weaknesses:Academic support from research advisors, including committee advisors"                                        
+ [55] "eemb_strengths_weaknesses:Approachability of non-advising faculty"                                                                      
+ [56] "eemb_strengths_weaknesses:Approachability of department staff"                                                                          
+ [57] "eemb_strengths_weaknesses:Mentorship opportunities"                                                                                     
+ [58] "eemb_strengths_weaknesses:Spirituality/religion"                                                                                        
+ [59] "eemb_strengths_weaknesses:Social life"                                                                                                  
+ [60] "eemb_strengths_weaknesses:Family life"                                                                                                  
+ [61] "eemb_strengths_weaknesses:Spending time outdoors"                                                                                       
+ [62] "finances:Monthly salary ($, current spring quarter 2023)"                                                                               
+ [63] "finances:Monthly cost of living currently ($, rent, food, gas, internet, dependency care, etc.)"                                        
+ [64] "monthly_bills"                                                                                                                          
+ [65] "financially_supported:Teaching assistantship"                                                                                           
+ [66] "financially_supported:Summer block grant"                                                                                               
+ [67] "financially_supported:Graduate student research assistantship"                                                                          
+ [68] "financially_supported:Conference travel"                                                                                                
+ [69] "financially_supported:Research support for research project"                                                                            
+ [70] "financially_supported:Emergency support"                                                                                                
+ [71] "financially_supported:Research support for objects or consummables that may be personally supplied (computer, car, software)."          
+ [72] "financially_supported:Mentoring students"                                                                                               
+ [73] "financially_supported:Service work provided to the department (organizing seminars, events, etc.)"                                      
+ [74] "eemb_ta:Time dedicated to TA'ing is reasonable and assigned tasks can be accomplished within the hours that I am paid for."             
+ [75] "eemb_ta:TAs are not expected to carry out tasks outside the scope of their contracts."                                                  
+ [76] "eemb_ta:There is sufficient training given to graduate students to learn how to TA."                                                    
+ [77] "eemb_ta:TA stress levels are comparable or less to that of graduate students on GSR or fellowship"                                      
+ [78] "eemb_ta:Even though I have wanted to say 'no', I have felt pressured to take on extra positions (extra reader positions, TAships, etc.)"
+ [79] "eemb_ta:There is reasonable support from the professors I TA for"                                                                       
+ [80] "eemb_ta:I have been confident in my knowledge of the material in the courses to which I have been assigned to TA."                      
+ [81] "social:frequency"                                                                                                                       
+ [82] "social:type"                                                                                                                            
+ [83] "social:climate"                                                                                                                         
+ [84] "demographic"                                                                                                                            
+ [85] "demographic_years_grad"                                                                                                                 
+ [86] "demographic_gender"                                                                                                                     
+ [87] "demographic_sexual_orientation"                                                                                                         
+ [88] "demographic_ethnicity"                                                                                                                  
+ [89] "demographic_religious"                                                                                                                  
+ [90] "demographic_hide_some"                                                                                                                  
+ [91] "eemb_prioritize:Equity and transparency for financial support"                                                                          
+ [92] "eemb_prioritize:Departmental climate (inclusivity and wellbeing)"                                                                       
+ [93] "eemb_prioritize:Departmental transparency"                                                                                              
+ [94] "eemb_prioritize:Faculty advising"                                                                                                       
+ [95] "eemb_prioritize:Professional skills development (e.g., stat courses)"                                                                   
+ [96] "eemb_prioritize:Program requirements (e.g., oral exam structure)"                                                                       
+ [97] "eemb_prioritize:Teaching assistant assignments or GSR work load"                                                                        
+ [98] "eemb_prioritize:Faculty diversity (e.g., recruitment and retention)"                                                                    
+ [99] "eemb_prioritize:Graduate student diversity (e.g., recruitment and retention)"                                                           
+[100] "eemb_prioritize:Undergraduate student diversity (e.g., recruitment and retention)"                                                      
+[101] "eemb_prioritize:Staff diversity (e.g., recruitment and retention)"                                                                      
+[102] "eemb_prioritize:Research associate diversity (e.g., recruitment and retention)"                                                         </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## add levels to scaled questions</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"eemb_prior"</span>)) <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(value) <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## add levels to scaled questions</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">contains</span>(<span class="st">"eemb_prior"</span>)) <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(value) <span class="sc">%&gt;%</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  6  2  3  1  4  5  7  8  9 10 12 11 NA</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> mc <span class="sc">%&gt;%</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"dei_conversations"</span>),</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">contains</span>(<span class="st">"discrimination_reporting"</span>)), <span class="sc">~</span><span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Very uncomfortable"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Somewhat uncomfortable"</span>, </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Neither comfortable nor uncomfortable"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Somewhat comfortable"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Extremely comfortable"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Unsure"</span>))),</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"personally_supported"</span>),</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">contains</span>(<span class="st">"eemb_ta"</span>)), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Strongly disagree"</span>, </span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Somewhat disagree"</span>, </span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Neither agree nor disagree"</span>,</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Somewhat agree"</span>,</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Strongly agree"</span>))),</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"eemb_issues"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Somewhat"</span>, <span class="st">"Yes"</span>, <span class="st">"Unsure"</span>))),</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"group"</span>), <span class="sc">~</span><span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No support"</span>, <span class="st">"Minimal support"</span>, <span class="st">"Some support"</span>, <span class="st">"Good suppot"</span>, <span class="st">"Great support"</span>, <span class="st">"Not sure"</span>))),</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">eemb_dei_meeting_frequency =</span> <span class="fu">factor</span>(eemb_dei_meeting_frequency, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Every once in a while as needed"</span>, </span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Once a year"</span>, </span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Twice a year"</span>, </span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Once a quarter"</span>)),</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"factors"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Not at all important"</span>, <span class="st">"Mostly unimportant"</span>, <span class="st">"Moderately important"</span>, <span class="st">"Very important"</span>))),</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"eemb_strengths"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Critically lacking"</span>,</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Somewhat lacking"</span>,</span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Somewhat available"</span>, </span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Readily available"</span>, </span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Unsure"</span>))),</span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"financially_supported"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Poor"</span>, </span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Adequate"</span>, </span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Fair"</span>, </span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Good"</span>, </span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Great"</span>))),</span>
-<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(<span class="st">`</span><span class="at">social:type</span><span class="st">`</span>, <span class="st">`</span><span class="at">social:climate</span><span class="st">`</span>), <span class="sc">~</span><span class="fu">factor</span>(<span class="st">`</span><span class="at">social:type</span><span class="st">`</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Extremely dissatisfied"</span>,</span>
-<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Somewhat dissatisfied"</span>,</span>
-<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Neither satisfied nor dissatisfied"</span>,</span>
-<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Somewhat satisfied"</span>,</span>
-<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Extremely satisfied"</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> mc <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"dei_conversations"</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">contains</span>(<span class="st">"discrimination_reporting"</span>)), <span class="sc">~</span><span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Very uncomfortable"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Somewhat uncomfortable"</span>, </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Neither comfortable nor uncomfortable"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Somewhat comfortable"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Extremely comfortable"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"Unsure"</span>))),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(<span class="fu">contains</span>(<span class="st">"personally_supported"</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">contains</span>(<span class="st">"eemb_ta"</span>)), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Strongly disagree"</span>, </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Somewhat disagree"</span>, </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Neither agree nor disagree"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Somewhat agree"</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"Strongly agree"</span>))),</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"eemb_issues"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Somewhat"</span>, <span class="st">"Yes"</span>, <span class="st">"Unsure"</span>))),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"group"</span>), <span class="sc">~</span><span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"No support"</span>, <span class="st">"Minimal support"</span>, <span class="st">"Some support"</span>, <span class="st">"Good suppot"</span>, <span class="st">"Great support"</span>, <span class="st">"Not sure"</span>))),</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">eemb_dei_meeting_frequency =</span> <span class="fu">factor</span>(eemb_dei_meeting_frequency, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Every once in a while as needed"</span>, </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Once a year"</span>, </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Twice a year"</span>, </span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>                                                                                    <span class="st">"Once a quarter"</span>)),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"factors"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Not at all important"</span>, <span class="st">"Mostly unimportant"</span>, <span class="st">"Moderately important"</span>, <span class="st">"Very important"</span>))),</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"eemb_strengths"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Critically lacking"</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Somewhat lacking"</span>,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Somewhat available"</span>, </span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Readily available"</span>, </span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Unsure"</span>))),</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">contains</span>(<span class="st">"financially_supported"</span>), <span class="sc">~</span> <span class="fu">factor</span>(., <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Poor"</span>, </span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Adequate"</span>, </span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Fair"</span>, </span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Good"</span>, </span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>                                                                          <span class="st">"Great"</span>))),</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>         <span class="fu">across</span>(<span class="fu">c</span>(<span class="st">`</span><span class="at">social:type</span><span class="st">`</span>, <span class="st">`</span><span class="at">social:climate</span><span class="st">`</span>), <span class="sc">~</span><span class="fu">factor</span>(<span class="st">`</span><span class="at">social:type</span><span class="st">`</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Extremely dissatisfied"</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Somewhat dissatisfied"</span>,</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Neither satisfied nor dissatisfied"</span>,</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Somewhat satisfied"</span>,</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>                                                          <span class="st">"Extremely satisfied"</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="summarize-responses" class="level1">
 <h1>Summarize responses</h1>
-<p>Without the demographics, all there is to report is how many people responded. Last year they grouped people into “Person of Color” and “White”.</p>
+<section id="who-took-the-survey" class="level2">
+<h2 class="anchored" data-anchor-id="who-took-the-survey">who took the survey</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 23</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">count</span>(demographic_years_grad)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["demographic_years_grad"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"1 year","2":"3"},{"1":"2-3 years","2":"7"},{"1":"4-5 years","2":"10"},{"1":"More than 5 years","2":"2"},{"1":"NA","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">count</span>(demographic_gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["demographic_gender"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Cis Female","2":"15"},{"1":"Cis Male","2":"6"},{"1":"Gender queer","2":"1"},{"1":"NA","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">count</span>(demographic_sexual_orientation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["demographic_sexual_orientation"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Bisexual","2":"1"},{"1":"Bisexual,Queer","2":"2"},{"1":"Heterosexual/straight","2":"16"},{"1":"Prefer not to say","2":"1"},{"1":"Queer","2":"2"},{"1":"NA","2":"1"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">count</span>(demographic_ethnicity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["demographic_ethnicity"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Asian","2":"2"},{"1":"Asian,White or Caucasian","2":"1"},{"1":"White or Caucasian","2":"18"},{"1":"NA","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">count</span>(demographic_religious) <span class="co"># other open response said culturally ---&gt; group with re</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["demographic_religious"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Atheist","2":"5"},{"1":"Non-religious/secular","2":"7"},{"1":"Non-religious/secular,Spiritual, not religious","2":"1"},{"1":"Other","2":"1"},{"1":"Religious","2":"1"},{"1":"Spiritual, not religious","2":"6"},{"1":"NA","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## aggregate</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> mc <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">demographic_years_grad =</span> <span class="fu">case_when</span>(demographic_years_grad <span class="sc">==</span> <span class="st">"More than 5 years"</span> <span class="sc">~</span> <span class="st">"5+"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                                            <span class="cn">TRUE</span> <span class="sc">~</span> demographic_years_grad),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">demographic_sexual_orientation =</span> <span class="fu">case_when</span>(demographic_sexual_orientation <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Heterosexual/straight"</span>) <span class="sc">~</span> <span class="st">"Heterosexual"</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                                                    demographic_sexual_orientation <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Queer"</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                                                                                          <span class="st">"Bisexual,Queer"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>                                                                                          <span class="st">"Bisexual"</span>) <span class="sc">~</span> <span class="st">"LGBTQIA+"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                                                    demographic_sexual_orientation <span class="sc">==</span> <span class="st">"Prefer not to say"</span> <span class="sc">~</span> <span class="cn">NA</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                                                    <span class="cn">TRUE</span> <span class="sc">~</span> demographic_sexual_orientation</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                                                    ),</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">demographic_ethnicity =</span> <span class="fu">case_when</span>(demographic_ethnicity <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Asian"</span>, <span class="st">"Asian,White or Caucasian"</span>) <span class="sc">~</span> <span class="st">"POC"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>                                           demographic_ethnicity <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"White or Caucasian"</span>) <span class="sc">~</span> <span class="st">"White"</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>                                           <span class="cn">TRUE</span> <span class="sc">~</span> demographic_ethnicity),</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">demographic_religious =</span> <span class="fu">case_when</span>(demographic_religious <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Non-religious/secular"</span>,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>                                                                        <span class="st">"Atheist"</span>, <span class="co">#QUESTION: do we agree with putting this in non-religous?</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>                                                                        <span class="st">"Non-religious/secular,Spiritual, not religious"</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>                                                                        <span class="st">"Spiritual, not religious"</span>) <span class="sc">~</span> <span class="st">"Nonreligious"</span>,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>                                           demographic_religious <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Other"</span>,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>                                                                        <span class="st">"Religious"</span>) <span class="sc">~</span> <span class="st">"Religious"</span>,</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>                                           <span class="cn">TRUE</span> <span class="sc">~</span> demographic_religious))</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">count</span>(demographic_sexual_orientation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["demographic_sexual_orientation"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Heterosexual","2":"16"},{"1":"LGBTQIA+","2":"5"},{"1":"NA","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">count</span>(demographic_ethnicity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["demographic_ethnicity"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"POC","2":"3"},{"1":"White","2":"18"},{"1":"NA","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mc <span class="sc">%&gt;%</span> <span class="fu">count</span>(demographic_religious)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["demographic_religious"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"Nonreligious","2":"19"},{"1":"Religious","2":"2"},{"1":"NA","2":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="plots" class="level1">
 <h1>Plots</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## plotting function</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plot_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(question){</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  plot_title <span class="ot">=</span> questions.short<span class="sc">$</span>question[<span class="fu">which</span>(questions.short<span class="sc">$</span>colnames <span class="sc">==</span> question)]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  plot_title <span class="ot">=</span> <span class="fu">str_wrap</span>(plot_title, <span class="at">width =</span> <span class="dv">50</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  mc <span class="sc">%&gt;%</span> </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">contains</span>(question)) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_remove_all</span>(name, <span class="fu">paste0</span>(question, <span class="st">":"</span>)),</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">name =</span> <span class="fu">str_wrap</span>(name, <span class="at">width=</span><span class="dv">30</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>()<span class="sc">+</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> name, <span class="at">fill =</span> value),</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="st">"fill"</span>)<span class="sc">+</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> plot_title,</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> <span class="cn">NULL</span>)</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_fun(questions.short$colnames[1])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">## plotting function</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>plot_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(question){</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  plot_title <span class="ot">=</span> questions.short<span class="sc">$</span>question[<span class="fu">which</span>(questions.short<span class="sc">$</span>colnames <span class="sc">==</span> question)]</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  plot_title <span class="ot">=</span> <span class="fu">str_wrap</span>(plot_title, <span class="at">width =</span> <span class="dv">50</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  mc <span class="sc">%&gt;%</span> </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">contains</span>(question)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_remove_all</span>(name, <span class="fu">paste0</span>(question, <span class="st">":"</span>)),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">name =</span> <span class="fu">str_wrap</span>(name, <span class="at">width=</span><span class="dv">30</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> name, <span class="at">fill =</span> value),</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="st">"fill"</span>)<span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> plot_title,</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Proportion of respondants"</span>,</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_d</span>()</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_fun(questions.short$colnames[1])</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="do">## plotting function</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>plot_facet_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(question, facet_var){</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  plot_title <span class="ot">=</span> questions.short<span class="sc">$</span>question[<span class="fu">which</span>(questions.short<span class="sc">$</span>colnames <span class="sc">==</span> question)]</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  plot_title <span class="ot">=</span> <span class="fu">str_wrap</span>(plot_title, <span class="at">width =</span> <span class="dv">50</span>)</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>  mc <span class="sc">%&gt;%</span> </span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">contains</span>(question), <span class="fu">any_of</span>(facet_var)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">contains</span>(question)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">str_remove_all</span>(name, <span class="fu">paste0</span>(question, <span class="st">":"</span>)),</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>           <span class="at">name =</span> <span class="fu">str_wrap</span>(name, <span class="at">width=</span><span class="dv">30</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> name, <span class="at">fill =</span> value),</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="st">"stack"</span>)<span class="sc">+</span></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> plot_title,</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">fill =</span> <span class="cn">NULL</span>,</span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Number of respondants"</span>) <span class="sc">+</span></span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(.data[[facet_var]]), <span class="at">space=</span><span class="st">"free"</span>, <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">labeller =</span> label_context) <span class="sc">+</span></span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_extended</span>(<span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_d</span>()</span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_facet_fun(questions.short$colnames[1], "demographic_gender")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>toplot <span class="ot">&lt;-</span> questions.short <span class="sc">%&gt;%</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>colnames <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"finances"</span>, <span class="st">"monthly_bills"</span>, <span class="st">"eemb_prioritize"</span>, <span class="st">"eemb_dei_meeting_frequency"</span>, <span class="st">"discrimination_resources"</span>, <span class="st">"social"</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(toplot)) {</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[i]) </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>toplot <span class="ot">&lt;-</span> questions.short <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>colnames <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"finances"</span>, <span class="st">"monthly_bills"</span>, <span class="st">"eemb_prioritize"</span>, <span class="st">"eemb_dei_meeting_frequency"</span>, <span class="st">"discrimination_resources"</span>, <span class="st">"social"</span>), <span class="sc">!</span><span class="fu">str_detect</span>(colnames, <span class="st">"demographic"</span>))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>demographic.cats <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"demographic_years_grad"</span>, <span class="st">"demographic_gender"</span>, <span class="st">"demographic_sexual_orientation"</span>, <span class="st">"demographic_ethnicity"</span>, <span class="st">"demographic_religious"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="discussing-general-dei-issues" class="level2">
+<h2 class="anchored" data-anchor-id="discussing-general-dei-issues">Discussing general DEI issues</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">1</span>], demographic.cats[i]) </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-5.png" class="img-fluid" width="672"></p>
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-6.png" class="img-fluid" width="672"></p>
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-8-3.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-7.png" class="img-fluid" width="672"></p>
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-8-4.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-8.png" class="img-fluid" width="672"></p>
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-8-5.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-9.png" class="img-fluid" width="672"></p>
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-8-6.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">8</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="personally-feel-well-supported" class="level2">
+<h2 class="anchored" data-anchor-id="personally-feel-well-supported">Personally feel well supported</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="report_analysis_files/figure-html/unnamed-chunk-7-10.png" class="img-fluid" width="672"></p>
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">2</span>], demographic.cats[i]) </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-9-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-9-6.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+<section id="issues-with-representation" class="level2">
+<h2 class="anchored" data-anchor-id="issues-with-representation">Issues with representation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">3</span>], demographic.cats[i]) </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-10-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-10-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-10-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="extent-graduate-students-supported" class="level2">
+<h2 class="anchored" data-anchor-id="extent-graduate-students-supported">Extent graduate students supported</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">4</span>], demographic.cats[i]) </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-11-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-11-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="reporting-discrimination" class="level2">
+<h2 class="anchored" data-anchor-id="reporting-discrimination">Reporting discrimination</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">5</span>], demographic.cats[i]) </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-12-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-12-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-12-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="well-being-factors" class="level2">
+<h2 class="anchored" data-anchor-id="well-being-factors">Well-being factors</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">6</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">6</span>], demographic.cats[i]) </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-13-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-13-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-13-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="strengths-and-weaknesses" class="level2">
+<h2 class="anchored" data-anchor-id="strengths-and-weaknesses">Strengths and weaknesses</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">7</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">7</span>], demographic.cats[i]) </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-14-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-14-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-14-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-14-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="financial-well-being" class="level2">
+<h2 class="anchored" data-anchor-id="financial-well-being">Financial well-being</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">8</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">8</span>], demographic.cats[i]) </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-15-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-15-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-15-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-15-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-15-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="taing-experiences" class="level2">
+<h2 class="anchored" data-anchor-id="taing-experiences">TAing experiences</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">9</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(demographic.cats)) {</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_facet_fun</span>(toplot<span class="sc">$</span>colnames[<span class="dv">9</span>], demographic.cats[i]) </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-16-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-16-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="report_analysis_files/figure-html/unnamed-chunk-16-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 </section>
 
 </main>

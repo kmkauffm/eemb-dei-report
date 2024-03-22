@@ -2,15 +2,16 @@
 title: "EEMB DEI Report - 2022/23"
 author: Kayla Kauffman and Lauren Enright
 date: "`r Sys.Date()`"
-format: 
-  html:
+format:
+  html: 
     toc: true
     toc-location: left
+    df-print: paged
   pdf:
     toc: true
     toc-title: Contents
     documentclass: report
-    
+
 ---
 
 ```{r}
@@ -19,7 +20,8 @@ format:
 library(tidyverse)
 
 theme_set(theme_bw())
-theme_update(axis.title = element_blank())
+theme_update(axis.title.y = element_blank(),
+             plot.title = element_text(face = "bold"))
 ```
 
 # Load Data  
@@ -34,7 +36,7 @@ questions <- read_csv("eemb_dei_colrename.csv")  %>%
 ## these are the questions to be analyzed
 questions %>% 
   filter(!str_detect(newcolnames, "longanswer"), 
-         !str_detect(newcolnames, "demograph"), 
+         # !str_detect(newcolnames, "demograph"), 
          !str_detect(newcolnames, "other"),
          !str_detect(newcolnames, "confirm")) %>% 
   select(question)
@@ -44,10 +46,12 @@ In the dataset analyzed the shorter names for the questions are as follows after
 ```{r}
 (questions.short <- questions %>% 
   filter(!str_detect(newcolnames, "longanswer"), 
-         !str_detect(newcolnames, "demograph"), 
+         # !str_detect(newcolnames, "demograph"), 
          !str_detect(newcolnames, "other"),
          !str_detect(newcolnames, "eemb_support"),
          !str_detect(newcolnames, "confirm")) %>% 
+   mutate(across(everything(), ~ str_replace_all(., "well-being", "wellbeing"))) %>% 
+   separate(question, c("question", NA), sep = "\\?") %>% 
    separate(question, c("question", NA), sep = "-") %>% 
   select(question, colnames) %>% 
    mutate(question = str_remove_all(question, "\nUnderrepresented background: belonging to an identity group that has been historically and systematically excluded from higher education and other rights or opportunities, and is therefore currently less present or less visible in our department than they would be if the demographics of our community matched those of the broader population."),
@@ -73,7 +77,7 @@ colnames(mc) <- questions$newcolnames
 
 mc <- mc %>% 
   select(-contains("longanswer"), 
-         -contains("demographic"),
+         # -contains("demographic"),
          -contains("other"),
          -contains("eemb_support"),
          -confirm)
@@ -122,9 +126,41 @@ mc <- mc %>%
 ```
 
 # Summarize responses  
-Without the demographics, all there is to report is how many people responded. Last year they grouped people into "Person of Color" and "White".
+## who took the survey  
 ```{r}
 nrow(mc)
+
+mc %>% count(demographic_years_grad)
+mc %>% count(demographic_gender)
+mc %>% count(demographic_sexual_orientation)
+mc %>% count(demographic_ethnicity)
+mc %>% count(demographic_religious) # other open response said culturally ---> group with re
+
+## aggregate
+mc <- mc %>% 
+  mutate(demographic_years_grad = case_when(demographic_years_grad == "More than 5 years" ~ "5+",
+                                            TRUE ~ demographic_years_grad),
+         demographic_sexual_orientation = case_when(demographic_sexual_orientation %in% c("Heterosexual/straight") ~ "Heterosexual",
+                                                    demographic_sexual_orientation %in% c("Queer",
+                                                                                          "Bisexual,Queer",
+                                                                                          "Bisexual") ~ "LGBTQIA+",
+                                                    demographic_sexual_orientation == "Prefer not to say" ~ NA,
+                                                    TRUE ~ demographic_sexual_orientation
+                                                    ),
+         demographic_ethnicity = case_when(demographic_ethnicity %in% c("Asian", "Asian,White or Caucasian") ~ "POC",
+                                           demographic_ethnicity %in% c("White or Caucasian") ~ "White",
+                                           TRUE ~ demographic_ethnicity),
+         demographic_religious = case_when(demographic_religious %in% c("Non-religious/secular",
+                                                                        "Atheist", #QUESTION: do we agree with putting this in non-religous?
+                                                                        "Non-religious/secular,Spiritual, not religious",
+                                                                        "Spiritual, not religious") ~ "Nonreligious",
+                                           demographic_religious %in% c("Other",
+                                                                        "Religious") ~ "Religious",
+                                           TRUE ~ demographic_religious))
+
+mc %>% count(demographic_sexual_orientation)
+mc %>% count(demographic_ethnicity)
+mc %>% count(demographic_religious)
 ```
 
 # Plots  
@@ -139,25 +175,151 @@ plot_fun <- function(question){
     pivot_longer(everything()) %>% 
     mutate(name = str_remove_all(name, paste0(question, ":")),
            name = str_wrap(name, width=30)) %>% 
+    drop_na() %>% 
     ggplot()+
     geom_bar(aes(y = name, fill = value),
              position = "fill")+
     labs(title = plot_title,
-         fill = NULL)
+         x = "Proportion of respondants",
+         fill = NULL) +
+    scale_fill_viridis_d()
 }
 
 # plot_fun(questions.short$colnames[1])
+
+
+## plotting function
+plot_facet_fun <- function(question, facet_var){
+  plot_title = questions.short$question[which(questions.short$colnames == question)]
+  plot_title = str_wrap(plot_title, width = 50)
+  
+  mc %>% 
+    select(contains(question), any_of(facet_var)) %>% 
+    drop_na() %>% 
+    pivot_longer(contains(question)) %>% 
+    mutate(name = str_remove_all(name, paste0(question, ":")),
+           name = str_wrap(name, width=30)) %>% 
+    ggplot()+
+    geom_bar(aes(y = name, fill = value),
+             position = "stack")+
+    labs(title = plot_title,
+         fill = NULL,
+         x = "Number of respondants") +
+    facet_grid(cols = vars(.data[[facet_var]]), space="free", scales = "free", labeller = label_context) +
+    scale_x_continuous(breaks = scales::breaks_extended(2)) +
+    scale_fill_viridis_d()
+}
+
+# plot_facet_fun(questions.short$colnames[1], "demographic_gender")
 ```
 
 
 ```{r}
 toplot <- questions.short %>% 
-  filter(!colnames %in% c("finances", "monthly_bills", "eemb_prioritize", "eemb_dei_meeting_frequency", "discrimination_resources", "social"))
-for (i in 1:nrow(toplot)) {
-  print(
-  plot_fun(toplot$colnames[i]) 
-  )
-}
-plot_fun(toplot$colnames[8])
+  filter(!colnames %in% c("finances", "monthly_bills", "eemb_prioritize", "eemb_dei_meeting_frequency", "discrimination_resources", "social"), !str_detect(colnames, "demographic"))
+
+demographic.cats <- c("demographic_years_grad", "demographic_gender", "demographic_sexual_orientation", "demographic_ethnicity", "demographic_religious")
 ```
 
+
+## Discussing general DEI issues   
+```{r}
+plot_fun(toplot$colnames[1])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[1], demographic.cats[i]) 
+  )
+}
+```
+
+## Personally feel well supported
+```{r}
+
+plot_fun(toplot$colnames[2])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[2], demographic.cats[i]) 
+  )
+}
+```
+
+## Issues with representation
+```{r}
+plot_fun(toplot$colnames[3])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[3], demographic.cats[i]) 
+  )
+}
+```
+
+
+## Extent graduate students supported 
+```{r}
+plot_fun(toplot$colnames[4])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[4], demographic.cats[i]) 
+  )
+}
+```
+
+## Reporting discrimination
+
+```{r}
+plot_fun(toplot$colnames[5])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[5], demographic.cats[i]) 
+  )
+}
+```
+
+## Well-being factors
+```{r}
+plot_fun(toplot$colnames[6])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[6], demographic.cats[i]) 
+  )
+}
+```
+
+## Strengths and weaknesses
+```{r}
+plot_fun(toplot$colnames[7])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[7], demographic.cats[i]) 
+  )
+}
+```
+
+## Financial well-being
+```{r}
+plot_fun(toplot$colnames[8])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[8], demographic.cats[i]) 
+  )
+}
+```
+
+## TAing experiences
+```{r}
+plot_fun(toplot$colnames[9])
+
+for (i in 1:length(demographic.cats)) {
+  print(
+  plot_facet_fun(toplot$colnames[9], demographic.cats[i]) 
+  )
+}
+```
